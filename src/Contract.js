@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Button, Card } from 'semantic-ui-react'
 import { ContractPromise as Contract } from '@polkadot/api-contract'
 
 import { useSubstrate } from './substrate-lib'
 
-import contractABI from './contract.json'
-const CONTRACT_ADDRESS = '5HXaG7Zefi4xAqvvEyPxrrcHwmiRvmH2MNyMnoZEaX41nDEu'
+import contractABI from './abis/erc20.json'
+import { DEPLOYED_ADDRESS } from './abis/contract.address'
+
 const BOB_ADDRESS = '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty' // Bob Address
 
 function Main(props) {
@@ -19,10 +20,8 @@ function Main(props) {
   const [queryResult, setQueryResult] = useState('')
   const [txResult, setTxResult] = useState(null)
 
-  const contract = new Contract(api, contractABI, CONTRACT_ADDRESS)
+  const contract = new Contract(api, contractABI, DEPLOYED_ADDRESS)
   const contractName = contract.abi.json.contract.name
-
-  // console.log('contract: ', contract)
 
   useEffect(() => {
     _onContractQuery()
