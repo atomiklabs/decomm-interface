@@ -7,7 +7,7 @@ import { useSubstrate } from './substrate-lib'
 import contractABI from './abis/erc20.json'
 import { DEPLOYED_ADDRESS } from './abis/contract.address'
 
-const BOB_ADDRESS = '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty' // Bob Address
+const DUSTY_NETWORK_2 = '5EZUU8NME1ZBWMUMqCdzKqde77ZHF5YVKmurWaFjyfFASs8X'
 
 function Main(props) {
   const { accountPair } = props
@@ -29,36 +29,46 @@ function Main(props) {
 
   const _onContractQuery = async () => {
     const balanceOfQuery = await contract.query.balanceOf(from, { value: 0, gasLimit: -1 }, target)
-    const balanceOf = balanceOfQuery.output.toHuman()
+
+    const balanceOf = balanceOfQuery.output && balanceOfQuery.output.toHuman()
     setQueryResult(balanceOf)
   }
 
   const _onContractTx = async () => {
     const value = 0
     const gasLimit = -1
-    const receiver = BOB_ADDRESS
+    const receiver = DUSTY_NETWORK_2
     const amount = 10000
 
-    await contract.tx.transfer({ value, gasLimit }, receiver, amount).signAndSend(signer, (result) => {
-      if (result.status.isInBlock) {
-        console.log('in a block')
-        // console.log('events', result.contractEvents)
+    console.log('unlock me :(', signer)
 
-        const e = result.contractEvents[0]
+    await contract.tx
+      .transfer({ value, gasLimit }, receiver, amount)
+      .signAndSend(signer, (result) => {
+        console.log('dupa')
 
-        const txResult = {
-          id: e.event.identifier,
-          from: e.args[0].toHuman(),
-          to: e.args[1].toHuman(),
-          value: e.args[2].toHuman(),
+        if (result.status.isInBlock) {
+          console.log('in a block')
+          // console.log('events', result.contractEvents)
+
+          const e = result.contractEvents[0]
+
+          const txResult = {
+            id: e.event.identifier,
+            from: e.args[0].toHuman(),
+            to: e.args[1].toHuman(),
+            value: e.args[2].toHuman(),
+          }
+
+          setTxResult(txResult)
+          _onContractQuery()
+        } else if (result.status.isFinalized) {
+          console.log('finalized')
         }
-
-        setTxResult(txResult)
-        _onContractQuery()
-      } else if (result.status.isFinalized) {
-        console.log('finalized')
-      }
-    })
+      })
+      .catch((error) => {
+        console.log(':( transaction failed', error)
+      })
   }
 
   return (

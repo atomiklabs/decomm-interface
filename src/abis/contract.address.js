@@ -1,0 +1,1 @@
+export const DEPLOYED_ADDRESS = "Zj3cgCYhHBKgUWnCyQrPcghXP4uVdm6NCktD2ZYto9EjJWD"

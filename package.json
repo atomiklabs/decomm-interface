@@ -6,7 +6,8 @@
   "license": "Unlicense",
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "CI=false react-app-rewired build",
+    "prod": "node server.js",
     "test": "CI=true react-app-rewired test --env=jsdom",
     "eject": "react-app-rewired eject",
     "lint": "eslint src/**/*.js",
@@ -45,7 +46,9 @@
     "eslint-plugin-only-warn": "^1.0.2",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
+    "express": "^4.17.1",
     "gh-pages": "^3.1.0",
+    "path": "^0.12.7",
     "react-app-rewired": "^2.1.8"
   },
   "eslintConfig": {
@@ -72,10 +75,7 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://substrate-developer-hub.github.io/substrate-front-end-template",
-  "bugs": {
-    "url": "https://github.com/substrate-developer-hub/substrate-front-end-template/issues"
-  },
+  "homepage": "./",
   "keywords": [
     "substrate",
     "substrate-ui",
